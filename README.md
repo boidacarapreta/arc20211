@@ -2,3 +2,7 @@
 
 # arc20211
 Chatbot para a disciplina de ARC
+
+# Equipes e repositórios
+
+- [glass-queens](https://github.com/glass-queens): [arc](https://github.com/glass-queens/arc)
