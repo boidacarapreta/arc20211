@@ -6,3 +6,4 @@ Chatbot para a disciplina de ARC
 # Equipes e repositórios
 
 - [glass-queens](https://github.com/glass-queens): [arc](https://github.com/glass-queens/arc)
+- [lasscampos](https://github.com/lasscampos): [ARC-2021](https://github.com/lasscampos/ARC-2021)
