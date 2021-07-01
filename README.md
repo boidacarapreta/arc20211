@@ -11,3 +11,4 @@ Chatbot para a disciplina de ARC
 - [darkzone2](https://github.com/darkzone2): [ARC_20211_ChatBot](https://github.com/darkzone2/ARC_20211_ChatBot)
 - [lasscampos](https://github.com/lasscampos): [ARC-2021](https://github.com/lasscampos/ARC-2021)
 - [anaozuao](https://github.com/anaozuao): [ARC2021-1_Roberto](https://github.com/anaozuao/ARC2021-1_Roberto)
+- [Vitor-1921](https://github.com/Vitor-1921): [ARC-8](https://github.com/Vitor-1921/ARC-8)
