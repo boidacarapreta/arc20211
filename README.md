@@ -10,7 +10,7 @@ Nos anos 1990, tive acesso ao jogo [Indiana Jones and the Fate of Atlantis](http
 
 Há pouco tempo, ao ler [Jogador Número 1](http://www.leya.com.br/jogador-n-1/) - e depois assistir ao filme - tive uma onda de nostalgia, passando por [Adventure](<https://en.wikipedia.org/wiki/Adventure_(1980_video_game)>), onde as ações eram ainda mais simples: apenas texto. Estamos falando de Atari, afinal (CGA existia apenas nos computadores dos anos 1980 em diante, como por exemplo [The Ethernal castle [REMASTERED]](https://www.theeternalcastle.net)).
 
-Assim, veio a ideia de resgatar uma ideia há muito adormecida: jogos de masmorra, _dungeon-like_, em texto puro. Vale arte ASCII, como [Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life). Mas, para chegar lá, usei mais referências como a minissérie [GDLK](https://www.netflix.com/title/81019087) e até em lançamentos recentes como [Stories Untold](https://storiesuntoldgame.com/trailer).
+Assim, veio a ideia de resgatar uma ideia há muito adormecida: jogos de masmorra, _dungeon-like_, em texto puro. Vale arte ASCII, como [Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life). Mas, para chegar lá, usei mais referências como a minissérie [GDLK](https://www.netflix.com/title/81019087) e até em lançamentos recentes como [Stories Untold](https://storiesuntoldgame.com/).
 
 ## Sobre o jogo
 
