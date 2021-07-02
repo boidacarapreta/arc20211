@@ -70,7 +70,7 @@ o jogador está na primeira linha e terceira coluna, já que há o valor 257 = 2
 - Potências de 2 entre 16 e 31 (terceiro byte): espada;
 - Potências de 2 entre 32 e 47 (quarto byte): inimigos;
 
-assim como inventário, pontos de ataque e de defesa, poções, magias etc. etc. Um pixel com valor 33025 = 32768 + 256 + 1 = 2^16 + 2^8 + 2^0 = espada + primeiro jogador + corredor/sala = primeiro personagem com espado no corredor/sala.
+assim como inventário, pontos de ataque e de defesa, poções, magias etc. etc. Um pixel com valor 33025 = 32768 + 256 + 1 = 2^16 + 2^8 + 2^0 = espada + primeiro jogador + corredor/sala = primeiro personagem com espada no corredor/sala.
 
 Mas calma! Primeiro um único mapa estático, um único jogador. Depois, mapas por jogador, mapas procedurais, e assim por diante.
 
