@@ -1,11 +1,6 @@
 import logging
 
-# This is a minimal configuration to get you started with the Text mode.
-# If you want to connect Errbot to chat services, checkout
-# the options in the more complete config-template.py from here:
-# https://raw.githubusercontent.com/errbotio/errbot/master/errbot/config-template.py
-
-BACKEND = 'Text'  # Errbot will start in text mode (console only mode) and will answer commands from there.
+BACKEND = 'Text'
 
 BOT_DATA_DIR = r'data'
 BOT_EXTRA_PLUGIN_DIR = r'plugins'
@@ -13,4 +8,11 @@ BOT_EXTRA_PLUGIN_DIR = r'plugins'
 BOT_LOG_FILE = r'errbot.log'
 BOT_LOG_LEVEL = logging.DEBUG
 
-BOT_ADMINS = ('@CHANGE_ME', )  # !! Don't leave that to "@CHANGE_ME" if you connect your errbot to a chat system !!
+BOT_ADMINS = ('@CHANGE_ME', )
+
+# Se os plugins têm dependências, usar ambiente virtual e requirements.txt
+AUTOINSTALL_DEPS = True
+
+# Prefixo do bot
+BOT_PREFIX = '!'
+BOT_PREFIX_OPTIONAL_ON_CHAT = True
