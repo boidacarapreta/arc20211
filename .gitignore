@@ -1,3 +1,6 @@
+# Informações sensíveis do Errbot, como token do Discord
+.env
+
 # Arquivos internos do Errbot
 data/
 
