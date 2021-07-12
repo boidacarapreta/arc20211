@@ -85,6 +85,6 @@ class Labirinto(BotPlugin):
                 if sentido:
                     return sentido
 
-    @re_botcmd(pattern=r"^(.*)[direita|esquerda](.*)$")
+    @re_botcmd(pattern=r"^(.*)(direita|esquerda)(.*)$")
     def vira(self, msg, match):
-        pass
+        return "Virando para o lado, " + msg.frm.person
