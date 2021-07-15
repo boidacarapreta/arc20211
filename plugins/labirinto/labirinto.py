@@ -33,6 +33,7 @@ class Labirinto(BotPlugin):
         """
         Converter número inteiro em string de 32 bits.
         """
+
         return f'{inteiro:032b}'
 
     def posicao_do_jogador(self):
@@ -43,6 +44,7 @@ class Labirinto(BotPlugin):
         - Oeste (O)
         - Leste (L)
         """
+
         x = 0
         for linha in self.mapa_binarios:
             y = 0
@@ -74,6 +76,7 @@ class Labirinto(BotPlugin):
         """
         Apresentar o mapa no bot.
         """
+
         for linha in self.mapa_binarios:
             yield " ".join(map(str, linha))
 
@@ -82,6 +85,7 @@ class Labirinto(BotPlugin):
         """
         Informar a sentido do jogador como ponto cardeal.
         """
+        
         linha, coluna, sentido = self.posicao_do_jogador()
         yield "Posição no mapa: [" + str(linha) + "," + str(coluna) + "]"
         yield "Sentido (ponto cardeal): " + sentido
