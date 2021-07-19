@@ -19,10 +19,10 @@ class Labirinto(BotPlugin):
       - 16: sentido Leste
     Assim, o mapa acumula informações com base nessas
     potências de dois, como por exemplo:
-    5 = 4 + 1 = jogador no sentido Sul + sala ou corredor
+    17 = 16 + 1 = jogador no sentido Leste + sala ou corredor
     """
 
-    mapa_binarios = [[0, 0, 0, 17, 0],
+    mapa_inteiros = [[0, 0, 0, 17, 0],
                      [0, 0, 0, 1, 0],
                      [0, 0, 1, 1, 0],
                      [0, 0, 1, 1, 1],
@@ -46,17 +46,17 @@ class Labirinto(BotPlugin):
         """
 
         x = 0
-        for linha in self.mapa_binarios:
+        for linha in self.mapa_inteiros:
             y = 0
             for coluna in linha:
                 sentido = self.converter_inteiro_para_binario(coluna)[27:31]
                 """
                 Os sentidos estão organizados por bit,
                 a contar da direita para a esquerda:
-                - N: bit 30
-                - S: bit 29
-                - O: bit 28
-                - L: bit 27
+                - N: bit 30 (2^1)
+                - S: bit 29 (2^2)
+                - O: bit 28 (2^3)
+                - L: bit 27 (2^4)
                 Como o Python usa limite fechado a esquerda e aberto a direita,
                 o intervalo vai de 27 (inclui) a 31 (não inclui).
                 """
@@ -77,10 +77,10 @@ class Labirinto(BotPlugin):
         Apresentar o mapa no bot.
         """
 
-        for linha in self.mapa_binarios:
+        for linha in self.mapa_inteiros:
             yield " ".join(map(str, linha))
 
-    @re_botcmd(pattern=r"^(.*)sentido(.*)$")
+    @re_botcmd(pattern=r"^(.*)(eu|sentido)(.*)$")
     def jogador(self, msg, match):
         """
         Informar a sentido do jogador como ponto cardeal.
@@ -90,6 +90,6 @@ class Labirinto(BotPlugin):
         yield "Posição no mapa: [" + str(linha) + "," + str(coluna) + "]"
         yield "Sentido (ponto cardeal): " + sentido
 
-    @re_botcmd(pattern=r"^(.*)(direita|esquerda)(.*)$")
+    @re_botcmd(pattern=r"^(vir|gir)(a|e|ar)(.*)(direita|esquerda)(.*)$", matchall=True)
     def vira(self, msg, match):
         return "Virando para o lado, " + msg.frm.person
