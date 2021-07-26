@@ -19,7 +19,7 @@ class Labirinto(BotPlugin):
       - 16: sentido Leste
     Assim, o mapa acumula informações com base nessas
     potências de dois, como por exemplo:
-    5 = 4 + 1 = jogador no sentido Sul + sala ou corredor
+    5 = 4 + 1 = jogador no sentido Sul + sala ou corredor.
     """
 
     mapa_inteiros = [[0, 0, 0, 5, 0],
@@ -28,10 +28,10 @@ class Labirinto(BotPlugin):
                      [0, 0, 1, 1, 1],
                      [0, 0, 0, 0, 0]]
 
-    # https://stackoverflow.com/a/10411108/5167118
     def converter_inteiro_para_binario(self, inteiro):
         """
         Converter número inteiro em string de 32 bits.
+        Com base em: https://stackoverflow.com/a/10411108/5167118
         """
 
         return f"{inteiro:032b}"
@@ -71,9 +71,9 @@ class Labirinto(BotPlugin):
                 y += 1
             x += 1
 
-    def atualizar_posicao_do_jogador(self, rotação):
+    def atualizar_sentido_do_jogador(self, rotação):
         """
-        Atualizar a posição ou sentido do jogador no mapa,
+        Atualiza sentido do jogador no mapa,
         que por se tratar de uma matriz de inteiros é feita
         uma operação de soma/subtração nas células para
         atualizar os dados do jogador.
@@ -111,9 +111,7 @@ class Labirinto(BotPlugin):
                 rotacionar = -12
                 sentido_final = "S"
         else:
-            """
-            Se a rotação não é para direita, então é esquerda
-            """
+            """ Se a rotação não é para direita, então é esquerda. """
             if sentido_inicial == "N":
                 """
                 Norte -> Oeste
@@ -143,45 +141,107 @@ class Labirinto(BotPlugin):
                 """
                 rotacionar = -14
                 sentido_final = "N"
-        """
-        Atualiza o mapa de inteiros e informa o usuário o novo sentido
-        """
+        """ Atualiza o mapa de inteiros e informa o usuário o novo sentido. """
         self.mapa_inteiros[x][y] += rotacionar
         return x, y, sentido_final
 
+    def atualizar_posicao_do_jogador(self, movimento):
+        """
+        Atualiza posição do jogador no mapa,
+        que por se tratar de uma matriz de inteiros é feita
+        uma operação de soma/subtração nas células para
+        atualizar os dados do jogador.
+        Há 3 possíveis alternativas:
+        - 1: a posição adiante está fora do mapa;
+        - 2: a posição adiante é sala ou corredor;
+        - 3: a posição adiante é parede.
+        Somente a alternativa 2 fará a movimentação no mapa.
+        """
+
+        x, y, sentido_inicial = self.posicao_do_jogador()
+        if movimento == "frente":
+            if sentido_inicial == "N":
+                """
+                A célula a frente do jogador está uma linha acima, 
+                na mesma coluna. Então, verificar se já está na
+                primeira linha e se a próxima célula é sala ou corredor.
+                Ou seja, se o primeiro bit (2^0, no. 31) é 1.
+                Caso contrário, retornar a mesma posição
+                """
+
+                if x - 1 < 0:
+                    return "fora do mapa"
+                elif self.converter_inteiro_para_binario(self.mapa_inteiros[x-1][y])[31] == '1':
+                    """ Norte = 2, mover para linha acima: x - 1. """
+                    self.mapa_inteiros[x][y] -= 2
+                    self.mapa_inteiros[x-1][y] += 2
+                    return "um passo a frente"
+                else:
+                    return "parede"
+            elif sentido_inicial == "S":
+                if x + 1 >= len(self.mapa_inteiros):
+                    return "fora do mapa"
+                elif self.converter_inteiro_para_binario(self.mapa_inteiros[x+1][y])[31] == '1':
+                    """ Sul = 4, mover para linha abaixo: x + 1. """
+                    self.mapa_inteiros[x][y] -= 4
+                    self.mapa_inteiros[x+1][y] += 4
+                    return "um passo a frente"
+                else:
+                    return "parede"
+            elif sentido_inicial == "O":
+                if y - 1 < 0:
+                    return "fora do mapa"
+                elif self.converter_inteiro_para_binario(self.mapa_inteiros[x][y-1])[31] == '1':
+                    """ Oeste = 8, mover para coluna a esquerda: y - 1. """
+                    self.mapa_inteiros[x][y] -= 8
+                    self.mapa_inteiros[x][y-1] += 8
+                    return "um passo a frente"
+                else:
+                    return "parede"
+            else:
+                """ Sentido é leste (L). """
+                if y + 1 >= len(self.mapa_inteiros[0]):
+                    return "fora do mapa"
+                elif self.converter_inteiro_para_binario(self.mapa_inteiros[x][y+1])[31] == '1':
+                    """ Leste = 16, mover para coluna a direita: y + 1. """
+                    self.mapa_inteiros[x][y] -= 16
+                    self.mapa_inteiros[x][y+1] += 16
+                    return "um passo a frente"
+                else:
+                    return "parede"
+
     @re_botcmd(pattern=r"^(.*)mapa(.*)$")
     def mapa(self, msg, match):
-        """
-        Apresentar o mapa no bot.
-        """
+        """ Apresentar o mapa no bot. """
 
         for linha in self.mapa_inteiros:
             yield " ".join(map(str, linha))
 
     @re_botcmd(pattern=r"^(.*)(eu|sentido)(.*)$")
     def jogador(self, msg, match):
-        """
-        Informar a sentido do jogador como ponto cardeal.
-        """
+        """ Informar a sentido do jogador como ponto cardeal. """
 
-        linha, coluna, sentido = self.posicao_do_jogador()
+        linha, coluna, posição = self.posicao_do_jogador()
         yield "Posição no mapa: [" + str(linha) + "," + str(coluna) + "]"
-        yield "Sentido (ponto cardeal): " + sentido
+        yield "Sentido (ponto cardeal): " + posição
 
     @re_botcmd(pattern=r"^(.*)direita(.*)$")
     def direita(self, msg, match):
-        """
-        Rotacionar 90 graus o jogador para a direita - na sua perspectiva.
-        """
+        """ Rotacionar 90 graus o jogador para a direita - na sua perspectiva.  """
 
-        x, y, sentido = self.atualizar_posicao_do_jogador("direita")
+        x, y, sentido = self.atualizar_sentido_do_jogador("direita")
         yield "Novo sentido: " + sentido
 
     @re_botcmd(pattern=r"^(.*)esquerda(.*)$")
     def esquerda(self, msg, match):
-        """
-        Rotacionar 90 graus o jogador para a esquerda - na sua perspectiva.
-        """
+        """ Rotacionar 90 graus o jogador para a esquerda - na sua perspectiva. """
 
-        x, y, sentido = self.atualizar_posicao_do_jogador("esquerda")
+        x, y, sentido = self.atualizar_sentido_do_jogador("esquerda")
         yield "Novo sentido: " + sentido
+
+    @re_botcmd(pattern=r"^(.*)frente(.*)$")
+    def frente(self, msg, match):
+        """ Mover uma posição a frente - de forma relativa ao jogador - no mapa. """
+
+        mensagem = self.atualizar_posicao_do_jogador("frente")
+        yield mensagem
