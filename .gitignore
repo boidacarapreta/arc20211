@@ -1,3 +1,6 @@
+# Arquivos de SO
+.DS_Store
+
 # Informações sensíveis do Errbot, como token do Discord
 .env
 

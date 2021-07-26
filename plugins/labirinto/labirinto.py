@@ -79,55 +79,62 @@ class Labirinto(BotPlugin):
         atualizar os dados do jogador.
         """
 
-        x, y, sentido = self.posicao_do_jogador()
+        x, y, sentido_inicial = self.posicao_do_jogador()
         if rotação == "direita":
-            if sentido == "N":
+            if sentido_inicial == "N":
                 """
                 Norte -> Leste
                 - 2 (N) + 16 (L)
                 """
                 rotacionar = +14
-            elif sentido == "S":
+                sentido_final = "L"
+            elif sentido_inicial == "S":
                 """
                 Sul -> Oeste
                 - 4 (S) + 8 (O)
                 """
                 rotacionar = +4
-            elif sentido == "O":
+                sentido_final = "O"
+            elif sentido_inicial == "O":
                 """
                 Oeste -> Norte
                 - 8 (O) + 2 (N)
                 """
                 rotacionar = -6
+                sentido_final = "N"
             else:
                 """
                 Último caso é Leste ("L")
                 Leste -> Sul
-                 - 16 (L) + 4 (S)
+                - 16 (L) + 4 (S)
                 """
                 rotacionar = -12
+                sentido_final = "S"
         else:
             """
             Se a rotação não é para direita, então é esquerda
             """
-            if sentido == "N":
+            if sentido_inicial == "N":
                 """
                 Norte -> Oeste
                 - 2 (N) + 8 (O)
                 """
                 rotacionar = +6
-            elif sentido == "S":
+                sentido_final = "O"
+            elif sentido_inicial == "S":
                 """
                 Sul -> Leste
                 - 4 (S) + 16 (L)
                 """
                 rotacionar = +12
-            elif sentido == "O":
+                sentido_final = "L"
+            elif sentido_inicial == "O":
                 """
                 Oeste -> Sul
                 - 8 (O) + 4 (S)
                 """
                 rotacionar = -4
+                sentido_final = "S"
             else:
                 """
                 Último caso é Leste ("L")
@@ -135,11 +142,12 @@ class Labirinto(BotPlugin):
                 - 16 (L) + 2 (N)
                 """
                 rotacionar = -14
+                sentido_final = "N"
         """
         Atualiza o mapa de inteiros e informa o usuário o novo sentido
         """
         self.mapa_inteiros[x][y] += rotacionar
-        return self.posicao_do_jogador()
+        return x, y, sentido_final
 
     @re_botcmd(pattern=r"^(.*)mapa(.*)$")
     def mapa(self, msg, match):
