@@ -93,3 +93,4 @@ Parece complicado apenas lendo a explicação deste jogo? Imagina jogá-lo usand
 - [anaozuao](https://github.com/anaozuao): [ARC2021-1_Roberto](https://github.com/anaozuao/ARC2021-1_Roberto)
 - [Vitor-1921](https://github.com/Vitor-1921): [ARC-8](https://github.com/Vitor-1921/ARC-8)
 - [GamePog](https://github.com/GamePog): [Chatbot-ARC](https://github.com/GamePog/Chatbot-ARC)
+- [Hazzkunho](https://github.com/Hazzkunho): [botdado2021](https://github.com/Hazzkunho/botdado2021)
