@@ -85,7 +85,6 @@ Parece complicado apenas lendo a explicação deste jogo? Imagina jogá-lo usand
 
 # Equipes e repositórios
 
-- [glass-queens](https://github.com/glass-queens): [arc](https://github.com/glass-queens/arc)
 - [lasscampos](https://github.com/lasscampos): [ARC-2021](https://github.com/lasscampos/ARC-2021)
 - [iftelecom](https://github.com/iftelecom): [arc21](https://github.com/iftelecom/arc21)
 - [darkzone2](https://github.com/darkzone2): [ARC_20211_ChatBot](https://github.com/darkzone2/ARC_20211_ChatBot)
@@ -95,3 +94,4 @@ Parece complicado apenas lendo a explicação deste jogo? Imagina jogá-lo usand
 - [GamePog](https://github.com/GamePog): [Chatbot-ARC](https://github.com/GamePog/Chatbot-ARC)
 - [Hazzkunho](https://github.com/Hazzkunho): [botdado2021](https://github.com/Hazzkunho/botdado2021)
 - [DalianeAna](https://github.com/DalianeAna): [arc20211](https://github.com/DalianeAna/arc20211)
+- [Jessica-ps](https://github.com/Jessica-ps): [ARC---AGE-OF-GLASS](https://github.com/Jessica-ps/ARC---AGE-OF-GLASS)
