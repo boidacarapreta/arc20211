@@ -95,3 +95,23 @@ Parece complicado apenas lendo a explicação deste jogo? Imagina jogá-lo usand
 - [Hazzkunho](https://github.com/Hazzkunho): [botdado2021](https://github.com/Hazzkunho/botdado2021)
 - [DalianeAna](https://github.com/DalianeAna): [arc20211](https://github.com/DalianeAna/arc20211)
 - [Jessica-ps](https://github.com/Jessica-ps): [ARC---AGE-OF-GLASS](https://github.com/Jessica-ps/ARC---AGE-OF-GLASS)
+- [joao-vca](https://github.com/joao-vca): [projeto20211](https://github.com/joao-vca/projeto20211)
+
+## Entregas
+
+| Aluno      | Entrega 1 |
+| ---------- | --------- |
+| Beatriz    | 10        |
+| Bruno      | 10        |
+| Daliane    | 6         |
+| Fernanda   | 10        |
+| Jader      | 6         |
+| Jéssica    | 6         |
+| João       | 6         |
+| José       | 6         |
+| Larissa    | 10        |
+| Lucas Hass | 10        |
+| Roberto    | 6         |
+| Talita     | 10        |
+| Vitor      | 10        |
+| Yasmin     | 10        |
