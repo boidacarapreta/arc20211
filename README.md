@@ -99,19 +99,19 @@ Parece complicado apenas lendo a explicação deste jogo? Imagina jogá-lo usand
 
 ## Entregas
 
-| Aluno      | Entrega 1 |
-| ---------- | --------- |
-| Beatriz    | 10        |
-| Bruno      | 10        |
-| Daliane    | 6         |
-| Fernanda   | 10        |
-| Jader      | 6         |
-| Jéssica    | 6         |
-| João       | 6         |
-| José       | 6         |
-| Larissa    | 10        |
-| Lucas Hass | 10        |
-| Roberto    | 6         |
-| Talita     | 10        |
-| Vitor      | 10        |
-| Yasmin     | 10        |
+| Aluno      | Entrega 1 | Entrega 2 | Entrega 3 |
+| ---------- | --------- | --------- | --------- |
+| Beatriz    | 10        | 10        |           |
+| Bruno      | 10        |           |           |
+| Daliane    | 6         | 10        | 10        |
+| Fernanda   | 10        |           |           |
+| Jader      | 6         |           |           |
+| Jéssica    | 6         | 10        |           |
+| João       | 6         | 10        |           |
+| José       | 6         |           |           |
+| Larissa    | 10        |           |           |
+| Lucas Hass | 10        |           |           |
+| Roberto    | 6         | 10        |           |
+| Talita     | 10        |           |           |
+| Vitor      | 10        | 10        |           |
+| Yasmin     | 10        | 10        |           |
