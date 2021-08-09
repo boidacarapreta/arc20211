@@ -22,11 +22,23 @@ class Labirinto(BotPlugin):
     5 = 4 + 1 = jogador no sentido Sul + sala ou corredor.
     """
 
+    """ Mapa de inteiros único para todos os jogadores (por enquanto). """
     mapa_inteiros = [[0, 0, 0, 5, 0],
                      [0, 0, 0, 1, 0],
                      [0, 0, 1, 1, 0],
                      [0, 0, 1, 1, 1],
                      [0, 0, 0, 0, 0]]
+
+    """ Posição do final do labirinto. """
+    final = {"x": 3, "y": 4}
+
+    """ Dicionário de mensagens de resposta ao usuário. """
+    mensagens = {
+        "fora do mapa": "Fora dos limites do mapa 🗺️",
+        "parede": "Parede 🧍‍♂️🧱",
+        "fim do labirinto": "Fim do labirinto 🏆",
+        "um passo a frente": "Um passo a frente 🚶🏽"
+    }
 
     def converter_inteiro_para_binario(self, inteiro):
         """
@@ -170,56 +182,68 @@ class Labirinto(BotPlugin):
                 """
 
                 if x - 1 < 0:
-                    return "fora do mapa"
+                    return self.mensagens["fora do mapa"]
                 elif self.converter_inteiro_para_binario(self.mapa_inteiros[x-1][y])[31] == '1':
                     """ Norte = 2, mover para linha acima: x - 1. """
                     self.mapa_inteiros[x][y] -= 2
                     self.mapa_inteiros[x-1][y] += 2
-                    return "um passo a frente"
+                    if x - 1 == self.final["x"] and y == self.final["y"]:
+                        return self.mensagens["fim do labirinto"]
+                    else:
+                        return self.mensagens["um passo a frente"]
                 else:
-                    return "parede"
+                    return self.mensagens["parede"]
             elif sentido_inicial == "S":
                 """
                 A célula a frente do jogador está uma linha abaixo (x + 1),
                 na mesma coluna.
                 """
                 if x + 1 >= len(self.mapa_inteiros):
-                    return "fora do mapa"
+                    return self.mensagens["fora do mapa"]
                 elif self.converter_inteiro_para_binario(self.mapa_inteiros[x+1][y])[31] == '1':
                     """ Sul = 4, mover para linha abaixo: x + 1. """
                     self.mapa_inteiros[x][y] -= 4
                     self.mapa_inteiros[x+1][y] += 4
-                    return "um passo a frente"
+                    if x + 1 == self.final["x"] and y == self.final["y"]:
+                        return self.mensagens["fim do labirinto"]
+                    else:
+                        return self.mensagens["um passo a frente"]
                 else:
-                    return "parede"
+                    return self.mensagens["parede"]
             elif sentido_inicial == "O":
                 """
                 A célula a frente do jogador está na mesma linha,
                 uma coluna a esquerda (y - 1).
                 """
                 if y - 1 < 0:
-                    return "fora do mapa"
+                    return self.mensagens["fora do mapa"]
                 elif self.converter_inteiro_para_binario(self.mapa_inteiros[x][y-1])[31] == '1':
                     """ Oeste = 8, mover para coluna a esquerda: y - 1. """
                     self.mapa_inteiros[x][y] -= 8
                     self.mapa_inteiros[x][y-1] += 8
-                    return "um passo a frente"
+                    if x == self.final["x"] and y - 1 == self.final["y"]:
+                        return self.mensagens["fim do labirinto"]
+                    else:
+                        return self.mensagens["um passo a frente"]
                 else:
-                    return "parede"
+                    return self.mensagens["parede"]
             else:
                 """ Sentido é leste (L).
                 A célula a frente do jogador está na mesma linha,
                 uma coluna a direita (y + 1).
                 """
                 if y + 1 >= len(self.mapa_inteiros[0]):
-                    return "fora do mapa"
+                    return self.mensagens["fora do mapa"]
                 elif self.converter_inteiro_para_binario(self.mapa_inteiros[x][y+1])[31] == '1':
                     """ Leste = 16, mover para coluna a direita: y + 1. """
                     self.mapa_inteiros[x][y] -= 16
                     self.mapa_inteiros[x][y+1] += 16
-                    return "um passo a frente"
+                    if x == self.final["x"] and y + 1 == self.final["y"]:
+                        return self.mensagens["fim do labirinto"]
+                    else:
+                        return self.mensagens["um passo a frente"]
                 else:
-                    return "parede"
+                    return self.mensagens["parede"]
 
     @re_botcmd(pattern=r"^(.*)mapa(.*)$")
     def mapa(self, msg, match):
@@ -233,8 +257,8 @@ class Labirinto(BotPlugin):
         """ Informar a sentido do jogador como ponto cardeal. """
 
         linha, coluna, posição = self.posicao_do_jogador()
-        yield "Posição no mapa: [" + str(linha) + "," + str(coluna) + "]"
-        yield "Sentido (ponto cardeal): " + posição
+        yield "Posição no mapa: [" + str(linha) + "," + str(coluna) + "] 🗺️"
+        yield "Sentido: " + posição + " 🧭"
 
     @re_botcmd(pattern=r"^(.*)direita(.*)$")
     def direita(self, msg, match):
