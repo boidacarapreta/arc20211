@@ -152,21 +152,21 @@ class Labirinto(BotPlugin):
         uma operação de soma/subtração nas células para
         atualizar os dados do jogador.
         Há 3 possíveis alternativas:
-        - 1: a posição adiante está fora do mapa;
-        - 2: a posição adiante é sala ou corredor;
-        - 3: a posição adiante é parede.
-        Somente a alternativa 2 fará a movimentação no mapa.
+        - A: a posição adiante está fora do mapa;
+        - B: a posição adiante é sala ou corredor;
+        - C: a posição adiante é parede.
+        Somente na alternativa B fará a movimentação no mapa.
         """
 
         x, y, sentido_inicial = self.posicao_do_jogador()
         if movimento == "frente":
             if sentido_inicial == "N":
                 """
-                A célula a frente do jogador está uma linha acima, 
+                A célula a frente do jogador está uma linha acima (x - 1),
                 na mesma coluna. Então, verificar se já está na
                 primeira linha e se a próxima célula é sala ou corredor.
                 Ou seja, se o primeiro bit (2^0, no. 31) é 1.
-                Caso contrário, retornar a mesma posição
+                Caso contrário, manter (e retornar) a mesma posição.
                 """
 
                 if x - 1 < 0:
@@ -179,6 +179,10 @@ class Labirinto(BotPlugin):
                 else:
                     return "parede"
             elif sentido_inicial == "S":
+                """
+                A célula a frente do jogador está uma linha abaixo (x + 1),
+                na mesma coluna.
+                """
                 if x + 1 >= len(self.mapa_inteiros):
                     return "fora do mapa"
                 elif self.converter_inteiro_para_binario(self.mapa_inteiros[x+1][y])[31] == '1':
@@ -189,6 +193,10 @@ class Labirinto(BotPlugin):
                 else:
                     return "parede"
             elif sentido_inicial == "O":
+                """
+                A célula a frente do jogador está na mesma linha,
+                uma coluna a esquerda (y - 1).
+                """
                 if y - 1 < 0:
                     return "fora do mapa"
                 elif self.converter_inteiro_para_binario(self.mapa_inteiros[x][y-1])[31] == '1':
@@ -199,7 +207,10 @@ class Labirinto(BotPlugin):
                 else:
                     return "parede"
             else:
-                """ Sentido é leste (L). """
+                """ Sentido é leste (L).
+                A célula a frente do jogador está na mesma linha,
+                uma coluna a direita (y + 1).
+                """
                 if y + 1 >= len(self.mapa_inteiros[0]):
                     return "fora do mapa"
                 elif self.converter_inteiro_para_binario(self.mapa_inteiros[x][y+1])[31] == '1':
