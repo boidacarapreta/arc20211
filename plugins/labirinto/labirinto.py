@@ -17,20 +17,21 @@ class Labirinto(BotPlugin):
       -  4: sentido Sul
       -  8: sentido Oeste
       - 16: sentido Leste
+    - Jogador está com inventário:
+      - Mapa: 32
+      - Bússola: 64
+    - Final do labirinto: 128
     Assim, o mapa acumula informações com base nessas
     potências de dois, como por exemplo:
     5 = 4 + 1 = jogador no sentido Sul + sala ou corredor.
     """
 
     """ Mapa de inteiros único para todos os jogadores (por enquanto). """
-    mapa_inteiros = [[0, 0, 0, 5, 0],
-                     [0, 0, 0, 1, 0],
-                     [0, 0, 1, 1, 0],
-                     [0, 0, 1, 1, 1],
-                     [0, 0, 0, 0, 0]]
-
-    """ Posição do final do labirinto. """
-    final = {"x": 3, "y": 4}
+    mapa_inteiros = [[0,   0,   0, 101,   0],
+                     [0,   0,   0,   1,   0],
+                     [0,   0,   1,   1,   0],
+                     [0,   0,   1,   1, 129],
+                     [0,   0,   0,   0,   0]]
 
     """ Dicionário de mensagens de resposta ao usuário. """
     mensagens = {
@@ -50,11 +51,17 @@ class Labirinto(BotPlugin):
 
     def posicao_do_jogador(self):
         """
-        Informar a orientação do jogador em relação ao mapa:
+        Informar a posição no mapa:
+        - Linha (eixo X)
+        - Coluna (eixo Y)
+        Também, informar a orientação do jogador em relação ao mapa:
         - Norte (N)
         - Sul (S)
         - Oeste (O)
         - Leste (L)
+        Além disso, os itens do inventário:
+        - Mapa
+        - Bússola
         """
 
         x = 0
@@ -72,14 +79,31 @@ class Labirinto(BotPlugin):
                 Como o Python usa limite fechado a esquerda e aberto a direita,
                 o intervalo vai de 27 (inclui) a 31 (não inclui).
                 """
-                if sentido == "0001":
-                    return x, y, "N"
-                elif sentido == "0010":
-                    return x, y, "S"
-                elif sentido == "0100":
-                    return x, y, "O"
-                elif sentido == "1000":
-                    return x, y, "L"
+                if sentido != "0000":
+                    """
+                    O jogador foi encontrado (qualquer sentido, por enquanto).
+                    Agora, ver se tem o mapa no inventário.
+                    """
+                    if self.converter_inteiro_para_binario(coluna)[26] == "1":
+                        mapa = True
+                    else:
+                        mapa = False
+                    """ Se tem a bússola no inventário. """
+                    if self.converter_inteiro_para_binario(coluna)[25] == "1":
+                        bússola = True
+                    else:
+                        bússola = False
+                    """ E, por fim, o sentido do jogador. """
+                    if sentido == "0001":
+                        sentido = "N"
+                    elif sentido == "0010":
+                        sentido = "S"
+                    elif sentido == "0100":
+                        sentido = "O"
+                    else:
+                        """ sentido == "1000" """
+                        sentido = "L"
+                    return x, y, sentido, mapa, bússola
                 y += 1
             x += 1
 
@@ -170,7 +194,14 @@ class Labirinto(BotPlugin):
         Somente na alternativa B fará a movimentação no mapa.
         """
 
-        x, y, sentido_inicial = self.posicao_do_jogador()
+        x, y, sentido_inicial, mapa, bússola = self.posicao_do_jogador()
+        """ Levar junto o inventário. """
+        inventário = 0
+        if mapa:
+            inventário += 32
+        if bússola:
+            inventário += 64
+        """ Realizar o movimento relativo ao jogador. """
         if movimento == "frente":
             if sentido_inicial == "N":
                 """
@@ -180,14 +211,13 @@ class Labirinto(BotPlugin):
                 Ou seja, se o primeiro bit (2^0, no. 31) é 1.
                 Caso contrário, manter (e retornar) a mesma posição.
                 """
-
                 if x - 1 < 0:
                     return self.mensagens["fora do mapa"]
-                elif self.converter_inteiro_para_binario(self.mapa_inteiros[x-1][y])[31] == '1':
+                elif self.converter_inteiro_para_binario(self.mapa_inteiros[x-1][y])[31] == "1":
                     """ Norte = 2, mover para linha acima: x - 1. """
-                    self.mapa_inteiros[x][y] -= 2
-                    self.mapa_inteiros[x-1][y] += 2
-                    if x - 1 == self.final["x"] and y == self.final["y"]:
+                    self.mapa_inteiros[x][y] -= 2 + inventário
+                    self.mapa_inteiros[x-1][y] += 2 + inventário
+                    if self.converter_inteiro_para_binario(self.mapa_inteiros[x-1][y])[24] == "1":
                         return self.mensagens["fim do labirinto"]
                     else:
                         return self.mensagens["um passo a frente"]
@@ -200,11 +230,11 @@ class Labirinto(BotPlugin):
                 """
                 if x + 1 >= len(self.mapa_inteiros):
                     return self.mensagens["fora do mapa"]
-                elif self.converter_inteiro_para_binario(self.mapa_inteiros[x+1][y])[31] == '1':
+                elif self.converter_inteiro_para_binario(self.mapa_inteiros[x+1][y])[31] == "1":
                     """ Sul = 4, mover para linha abaixo: x + 1. """
-                    self.mapa_inteiros[x][y] -= 4
-                    self.mapa_inteiros[x+1][y] += 4
-                    if x + 1 == self.final["x"] and y == self.final["y"]:
+                    self.mapa_inteiros[x][y] -= 4 + inventário
+                    self.mapa_inteiros[x+1][y] += 4 + inventário
+                    if self.converter_inteiro_para_binario(self.mapa_inteiros[x+1][y])[24] == "1":
                         return self.mensagens["fim do labirinto"]
                     else:
                         return self.mensagens["um passo a frente"]
@@ -217,11 +247,11 @@ class Labirinto(BotPlugin):
                 """
                 if y - 1 < 0:
                     return self.mensagens["fora do mapa"]
-                elif self.converter_inteiro_para_binario(self.mapa_inteiros[x][y-1])[31] == '1':
+                elif self.converter_inteiro_para_binario(self.mapa_inteiros[x][y-1])[31] == "1":
                     """ Oeste = 8, mover para coluna a esquerda: y - 1. """
-                    self.mapa_inteiros[x][y] -= 8
-                    self.mapa_inteiros[x][y-1] += 8
-                    if x == self.final["x"] and y - 1 == self.final["y"]:
+                    self.mapa_inteiros[x][y] -= 8 + inventário
+                    self.mapa_inteiros[x][y-1] += 8 + inventário
+                    if self.converter_inteiro_para_binario(self.mapa_inteiros[x][y-1])[24] == "1":
                         return self.mensagens["fim do labirinto"]
                     else:
                         return self.mensagens["um passo a frente"]
@@ -234,49 +264,76 @@ class Labirinto(BotPlugin):
                 """
                 if y + 1 >= len(self.mapa_inteiros[0]):
                     return self.mensagens["fora do mapa"]
-                elif self.converter_inteiro_para_binario(self.mapa_inteiros[x][y+1])[31] == '1':
+                elif self.converter_inteiro_para_binario(self.mapa_inteiros[x][y+1])[31] == "1":
                     """ Leste = 16, mover para coluna a direita: y + 1. """
-                    self.mapa_inteiros[x][y] -= 16
-                    self.mapa_inteiros[x][y+1] += 16
-                    if x == self.final["x"] and y + 1 == self.final["y"]:
+                    self.mapa_inteiros[x][y] -= 16 + inventário
+                    self.mapa_inteiros[x][y+1] += 16 + inventário
+                    if self.converter_inteiro_para_binario(self.mapa_inteiros[x][y+1])[24] == "1":
                         return self.mensagens["fim do labirinto"]
                     else:
                         return self.mensagens["um passo a frente"]
                 else:
                     return self.mensagens["parede"]
 
-    @re_botcmd(pattern=r"^(.*)mapa(.*)$")
-    def mapa(self, msg, match):
-        """ Apresentar o mapa no bot. """
+    def desenhar_mapa(self):
+        """
+        Desenhar o mapa com base no inventário:
+        - Jogador não tem mapa ou bússola: não desenhar sequer o mapa.
+        - Jogador tem apenas o mapa: desenhar o mapa sem o jogador.
+        - Jogador tem mapa e bússola: desenhar o mapa completo.
+        """
 
-        for linha in self.mapa_inteiros:
-            yield " ".join(map(str, linha))
+        x, y, sentido, mapa, bússola = self.posicao_do_jogador()
+        if mapa:
+            mapa = ""
+            i = 0
+            for linha in self.mapa_inteiros:
+                j = 0
+                for coluna in linha:
+                    if x == i and y == j and bússola:
+                        mapa += sentido
+                    elif coluna == 0:
+                        mapa += "X"
+                    else:
+                        mapa += "U"
+                    j += 1
+                mapa += "\n"
+                i += 1
+            return mapa
+        else:
+            return "Sem mapa no inventário."
 
-    @re_botcmd(pattern=r"^(.*)(eu|sentido)(.*)$")
+    @re_botcmd(pattern=r"^(.*)([e|E]u|[s|S]entido)(.*)$")
     def jogador(self, msg, match):
         """ Informar a sentido do jogador como ponto cardeal. """
 
-        linha, coluna, posição = self.posicao_do_jogador()
-        yield "Posição no mapa: [" + str(linha) + "," + str(coluna) + "] 🗺️"
-        yield "Sentido: " + posição + " 🧭"
+        x, y, sentido, mapa, bússola = self.posicao_do_jogador()
+        yield "Posição no mapa: [" + str(x) + "," + str(y) + "] 🗺️"
+        yield "Sentido: " + sentido + " 🧭"
 
-    @re_botcmd(pattern=r"^(.*)direita(.*)$")
+    @re_botcmd(pattern=r"^(.*)[d|D]direita(.*)$")
     def direita(self, msg, match):
         """ Rotacionar 90 graus o jogador para a direita - na sua perspectiva.  """
 
         x, y, sentido = self.atualizar_sentido_do_jogador("direita")
         yield "Novo sentido: " + sentido
 
-    @re_botcmd(pattern=r"^(.*)esquerda(.*)$")
+    @re_botcmd(pattern=r"^(.*)[e|E]squerda(.*)$")
     def esquerda(self, msg, match):
         """ Rotacionar 90 graus o jogador para a esquerda - na sua perspectiva. """
 
         x, y, sentido = self.atualizar_sentido_do_jogador("esquerda")
         yield "Novo sentido: " + sentido
 
-    @re_botcmd(pattern=r"^(.*)frente(.*)$")
+    @re_botcmd(pattern=r"^(.*)[f|F]rente(.*)$")
     def frente(self, msg, match):
         """ Mover uma posição a frente - de forma relativa ao jogador - no mapa. """
 
         mensagem = self.atualizar_posicao_do_jogador("frente")
         yield mensagem
+
+    @re_botcmd(pattern=r"^(.*)[m|M]apa(.*)$")
+    def mapa(self, msg, match):
+        """ Apresentar o mapa no bot. """
+
+        return self.desenhar_mapa()
