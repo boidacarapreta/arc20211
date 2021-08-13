@@ -110,7 +110,7 @@ Parece complicado apenas lendo a explicação deste jogo? Imagina jogá-lo usand
 | João       | 6         | 10        |           |
 | José       | 6         |           |           |
 | Larissa    | 10        |           |           |
-| Lucas Hass | 10        |           |           |
+| Lucas Hass | 10        | 10        |           |
 | Roberto    | 6         | 10        |           |
 | Talita     | 10        |           |           |
 | Vitor      | 10        | 10        |           |
