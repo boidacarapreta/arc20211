@@ -77,7 +77,7 @@ Mas calma! Primeiro um único mapa estático, um único jogador. Depois, mapas p
 Outra coisa importante: para não cansar a leitura, as frases e descrições serão escolhidas aleatoriamente de um banco de frases por tipo:
 
 - Sucesso: "`Meus parabéns!`", "`Eis o novo campeão!`" e
-- Morte: "`E finda a história deste bravo jogador`", "`Escreva "reiniciar" para invocar o jogador dos mortos`"
+- Morte: "`E finda a história deste bravo jogador`", "`Escreva "reiniciar" para invocar o jogador dos mortos`".
 
 de forma que as descrições sejam mais dinâmicas.
 
