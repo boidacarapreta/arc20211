@@ -21,7 +21,6 @@ porta
 abrir a porta
 girar a maçaneta da porta
 avançar até a porta
-empurrar a porta
 ```
 
 que são opções possíveis para interagir com o objeto `porta`. O jogo, como parte da experiência de imersão, não diz quais comandos são aceitos (ao contrário dos menus contextuais), embora haja uma sugestão na descrição do ambiente. E quando digo imersão, é isto mesmo: o jogador deve experimentar, vasculhar, desvendar o ambiente onde está, usando - claro - apenas texto.
