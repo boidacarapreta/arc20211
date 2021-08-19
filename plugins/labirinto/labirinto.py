@@ -26,12 +26,29 @@ class Labirinto(BotPlugin):
     5 = 4 + 1 = jogador no sentido Sul + sala ou corredor.
     """
 
-    """ Mapa de inteiros único para todos os jogadores (por enquanto). """
-    mapa_inteiros = [[0,   0,   0, 101,   0],
-                     [0,   0,   0,   1,   0],
-                     [0,   0,   1,   1,   0],
-                     [0,   0,   1,   1, 129],
-                     [0,   0,   0,   0,   0]]
+    """ Dicionário com o mapa por jogador: as partidas. """
+    partidas = {}
+
+    """ Retorna o mapa da partida do jogador. """
+
+    def partida(self, jogador, atualizar=None):
+        """
+        Retornar o mapa de determinado jogador.
+        Se o argumento 'atualizar' existe, atualizar no dicionário
+        e retornar o próprio valor.
+        Caso contrário, verificar se já tem uma partida em curso,
+        ou se é preciso criar uma do modelo - e retornar.
+        """
+
+        if atualizar:
+            self.partidas[jogador] = atualizar
+        elif jogador not in self.partidas:
+            self.partidas[jogador] = [[0,   0,   0, 101,   0],
+                                      [0,   0,   0,   1,   0],
+                                      [0,   0,   1,   1,   0],
+                                      [0,   0,   1,   1, 129],
+                                      [0,   0,   0,   0,   0]]
+        return self.partidas[jogador]
 
     """ Dicionário de mensagens de resposta ao usuário. """
     mensagens = {
@@ -49,7 +66,7 @@ class Labirinto(BotPlugin):
 
         return f"{inteiro:032b}"
 
-    def posicao_do_jogador(self):
+    def posicao_do_jogador(self, jogador):
         """
         Informar a posição no mapa:
         - Linha (eixo X)
@@ -65,7 +82,7 @@ class Labirinto(BotPlugin):
         """
 
         x = 0
-        for linha in self.mapa_inteiros:
+        for linha in self.partida(jogador):
             y = 0
             for coluna in linha:
                 sentido = self.converter_inteiro_para_binario(coluna)[27:31]
@@ -107,7 +124,7 @@ class Labirinto(BotPlugin):
                 y += 1
             x += 1
 
-    def atualizar_sentido_do_jogador(self, rotação):
+    def atualizar_sentido_do_jogador(self, jogador, rotação):
         """
         Atualiza sentido do jogador no mapa,
         que por se tratar de uma matriz de inteiros é feita
@@ -115,7 +132,8 @@ class Labirinto(BotPlugin):
         atualizar os dados do jogador.
         """
 
-        x, y, sentido_inicial = self.posicao_do_jogador()
+        partida = self.partida(jogador)
+        x, y, sentido_inicial, mapa, bússola = self.posicao_do_jogador(jogador)
         if rotação == "direita":
             if sentido_inicial == "N":
                 """
@@ -178,10 +196,11 @@ class Labirinto(BotPlugin):
                 rotacionar = -14
                 sentido_final = "N"
         """ Atualiza o mapa de inteiros e informa o usuário o novo sentido. """
-        self.mapa_inteiros[x][y] += rotacionar
+        partida[x][y] += rotacionar
+        self.partida(jogador, atualizar=partida)
         return x, y, sentido_final
 
-    def atualizar_posicao_do_jogador(self, movimento):
+    def atualizar_posicao_do_jogador(self, jogador, movimento):
         """
         Atualiza posição do jogador no mapa,
         que por se tratar de uma matriz de inteiros é feita
@@ -194,7 +213,8 @@ class Labirinto(BotPlugin):
         Somente na alternativa B fará a movimentação no mapa.
         """
 
-        x, y, sentido_inicial, mapa, bússola = self.posicao_do_jogador()
+        partida = self.partida(jogador)
+        x, y, sentido_inicial, mapa, bússola = self.posicao_do_jogador(jogador)
         """ Levar junto o inventário. """
         inventário = 0
         if mapa:
@@ -213,11 +233,12 @@ class Labirinto(BotPlugin):
                 """
                 if x - 1 < 0:
                     return self.mensagens["fora do mapa"]
-                elif self.converter_inteiro_para_binario(self.mapa_inteiros[x-1][y])[31] == "1":
+                elif self.converter_inteiro_para_binario(partida[x-1][y])[31] == "1":
                     """ Norte = 2, mover para linha acima: x - 1. """
-                    self.mapa_inteiros[x][y] -= 2 + inventário
-                    self.mapa_inteiros[x-1][y] += 2 + inventário
-                    if self.converter_inteiro_para_binario(self.mapa_inteiros[x-1][y])[24] == "1":
+                    partida[x][y] -= 2 + inventário
+                    partida[x-1][y] += 2 + inventário
+                    self.partida(jogador, atualizar=partida)
+                    if self.converter_inteiro_para_binario(partida[x-1][y])[24] == "1":
                         return self.mensagens["fim do labirinto"]
                     else:
                         return self.mensagens["um passo a frente"]
@@ -228,13 +249,14 @@ class Labirinto(BotPlugin):
                 A célula a frente do jogador está uma linha abaixo (x + 1),
                 na mesma coluna.
                 """
-                if x + 1 >= len(self.mapa_inteiros):
+                if x + 1 >= len(partida):
                     return self.mensagens["fora do mapa"]
-                elif self.converter_inteiro_para_binario(self.mapa_inteiros[x+1][y])[31] == "1":
+                elif self.converter_inteiro_para_binario(partida[x+1][y])[31] == "1":
                     """ Sul = 4, mover para linha abaixo: x + 1. """
-                    self.mapa_inteiros[x][y] -= 4 + inventário
-                    self.mapa_inteiros[x+1][y] += 4 + inventário
-                    if self.converter_inteiro_para_binario(self.mapa_inteiros[x+1][y])[24] == "1":
+                    partida[x][y] -= 4 + inventário
+                    partida[x+1][y] += 4 + inventário
+                    self.partida(jogador, atualizar=partida)
+                    if self.converter_inteiro_para_binario(partida[x+1][y])[24] == "1":
                         return self.mensagens["fim do labirinto"]
                     else:
                         return self.mensagens["um passo a frente"]
@@ -247,11 +269,12 @@ class Labirinto(BotPlugin):
                 """
                 if y - 1 < 0:
                     return self.mensagens["fora do mapa"]
-                elif self.converter_inteiro_para_binario(self.mapa_inteiros[x][y-1])[31] == "1":
+                elif self.converter_inteiro_para_binario(partida[x][y-1])[31] == "1":
                     """ Oeste = 8, mover para coluna a esquerda: y - 1. """
-                    self.mapa_inteiros[x][y] -= 8 + inventário
-                    self.mapa_inteiros[x][y-1] += 8 + inventário
-                    if self.converter_inteiro_para_binario(self.mapa_inteiros[x][y-1])[24] == "1":
+                    partida[x][y] -= 8 + inventário
+                    partida[x][y-1] += 8 + inventário
+                    self.partida(jogador, atualizar=partida)
+                    if self.converter_inteiro_para_binario(partida[x][y-1])[24] == "1":
                         return self.mensagens["fim do labirinto"]
                     else:
                         return self.mensagens["um passo a frente"]
@@ -262,20 +285,21 @@ class Labirinto(BotPlugin):
                 A célula a frente do jogador está na mesma linha,
                 uma coluna a direita (y + 1).
                 """
-                if y + 1 >= len(self.mapa_inteiros[0]):
+                if y + 1 >= len(partida[0]):
                     return self.mensagens["fora do mapa"]
-                elif self.converter_inteiro_para_binario(self.mapa_inteiros[x][y+1])[31] == "1":
+                elif self.converter_inteiro_para_binario(partida[x][y+1])[31] == "1":
                     """ Leste = 16, mover para coluna a direita: y + 1. """
-                    self.mapa_inteiros[x][y] -= 16 + inventário
-                    self.mapa_inteiros[x][y+1] += 16 + inventário
-                    if self.converter_inteiro_para_binario(self.mapa_inteiros[x][y+1])[24] == "1":
+                    partida[x][y] -= 16 + inventário
+                    partida[x][y+1] += 16 + inventário
+                    self.partida(jogador, atualizar=partida)
+                    if self.converter_inteiro_para_binario(partida[x][y+1])[24] == "1":
                         return self.mensagens["fim do labirinto"]
                     else:
                         return self.mensagens["um passo a frente"]
                 else:
                     return self.mensagens["parede"]
 
-    def desenhar_mapa(self):
+    def desenhar_mapa(self, jogador):
         """
         Desenhar o mapa com base no inventário:
         - Jogador não tem mapa ou bússola: não desenhar sequer o mapa.
@@ -283,11 +307,11 @@ class Labirinto(BotPlugin):
         - Jogador tem mapa e bússola: desenhar o mapa completo.
         """
 
-        x, y, sentido, mapa, bússola = self.posicao_do_jogador()
+        x, y, sentido, mapa, bússola = self.posicao_do_jogador(jogador)
         if mapa:
             mapa = ""
             i = 0
-            for linha in self.mapa_inteiros:
+            for linha in self.partida(jogador):
                 j = 0
                 for coluna in linha:
                     if x == i and y == j and bússola:
@@ -307,33 +331,35 @@ class Labirinto(BotPlugin):
     def jogador(self, msg, match):
         """ Informar a sentido do jogador como ponto cardeal. """
 
-        x, y, sentido, mapa, bússola = self.posicao_do_jogador()
+        x, y, sentido, mapa, bússola = self.posicao_do_jogador(msg.frm.person)
         yield "Posição no mapa: [" + str(x) + "," + str(y) + "] 🗺️"
         yield "Sentido: " + sentido + " 🧭"
 
-    @re_botcmd(pattern=r"^(.*)[d|D]direita(.*)$")
+    @re_botcmd(pattern=r"^(.*)[d|D]ireita(.*)$")
     def direita(self, msg, match):
         """ Rotacionar 90 graus o jogador para a direita - na sua perspectiva.  """
 
-        x, y, sentido = self.atualizar_sentido_do_jogador("direita")
+        x, y, sentido = self.atualizar_sentido_do_jogador(
+            msg.frm.person, "direita")
         yield "Novo sentido: " + sentido
 
     @re_botcmd(pattern=r"^(.*)[e|E]squerda(.*)$")
     def esquerda(self, msg, match):
         """ Rotacionar 90 graus o jogador para a esquerda - na sua perspectiva. """
 
-        x, y, sentido = self.atualizar_sentido_do_jogador("esquerda")
+        x, y, sentido = self.atualizar_sentido_do_jogador(
+            msg.frm.person, "esquerda")
         yield "Novo sentido: " + sentido
 
     @re_botcmd(pattern=r"^(.*)[f|F]rente(.*)$")
     def frente(self, msg, match):
         """ Mover uma posição a frente - de forma relativa ao jogador - no mapa. """
 
-        mensagem = self.atualizar_posicao_do_jogador("frente")
+        mensagem = self.atualizar_posicao_do_jogador(msg.frm.person, "frente")
         yield mensagem
 
     @re_botcmd(pattern=r"^(.*)[m|M]apa(.*)$")
     def mapa(self, msg, match):
         """ Apresentar o mapa no bot. """
 
-        return self.desenhar_mapa()
+        return self.desenhar_mapa(msg.frm.person)
