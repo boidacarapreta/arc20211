@@ -29,8 +29,6 @@ class Labirinto(BotPlugin):
     """ Dicionário com o mapa por jogador: as partidas. """
     partidas = {}
 
-    """ Retorna o mapa da partida do jogador. """
-
     def partida(self, jogador, atualizar=None):
         """
         Retornar o mapa de determinado jogador.
