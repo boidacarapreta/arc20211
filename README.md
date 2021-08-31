@@ -95,3 +95,4 @@ Parece complicado apenas lendo a explicação deste jogo? Imagina jogá-lo usand
 - [DalianeAna](https://github.com/DalianeAna): [arc20211](https://github.com/DalianeAna/arc20211)
 - [Jessica-ps](https://github.com/Jessica-ps): [ARC---AGE-OF-GLASS](https://github.com/Jessica-ps/ARC---AGE-OF-GLASS)
 - [joao-vca](https://github.com/joao-vca): [projeto20211](https://github.com/joao-vca/projeto20211)
+- [akyua](https://github.com/akyua): [botjokenpo](https://github.com/akyua/botjokenpo)
