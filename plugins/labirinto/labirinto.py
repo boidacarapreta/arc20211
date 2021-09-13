@@ -1,5 +1,9 @@
 from errbot import BotPlugin, re_botcmd
+from pymongo import MongoClient
 from random import randint
+from os import environ
+from dotenv import load_dotenv
+load_dotenv()
 
 
 class Labirinto(BotPlugin):
@@ -26,8 +30,10 @@ class Labirinto(BotPlugin):
     5 = 4 + 1 = jogador no sentido Sul + sala ou corredor.
     """
 
-    """ Dicionário com o mapa por jogador: as partidas. """
-    partidas = {}
+    CONNECTION_STRING = "".join(["mongodb+srv://etorresini:", environ.get("MONGODB_PASSWORD"),
+                                "@cluster0.rssfl.mongodb.net/Cluster0?retryWrites=true&w=majority"])
+    client = MongoClient(CONNECTION_STRING)
+    partidas = client.Cluster0.partidas
 
     def partida(self, jogador, atualizar=None):
         """
@@ -37,16 +43,25 @@ class Labirinto(BotPlugin):
         Caso contrário, verificar se já tem uma partida em curso,
         ou se é preciso criar uma do modelo - e retornar.
         """
+        
+        partida_padrao = [[0,   0,   0, 101,   0],
+                          [0,   0,   0,   1,   0],
+                          [0,   0,   1,   1,   0],
+                          [0,   0,   1,   1, 129],
+                          [0,   0,   0,   0,   0]]
 
         if atualizar:
-            self.partidas[jogador] = atualizar
-        elif jogador not in self.partidas:
-            self.partidas[jogador] = [[0,   0,   0, 101,   0],
-                                      [0,   0,   0,   1,   0],
-                                      [0,   0,   1,   1,   0],
-                                      [0,   0,   1,   1, 129],
-                                      [0,   0,   0,   0,   0]]
-        return self.partidas[jogador]
+            self.partidas.update_one(
+                {"jogador": jogador}, {"$set": {"partida": atualizar}}, upsert=True)
+            return atualizar
+        else:
+            resultado = self.partidas.find_one({"jogador": jogador})
+            if resultado:
+                return resultado["partida"]
+            else:
+                self.partidas.insert_one(
+                    {"jogador": jogador, "partida": partida_padrao})
+                return partida_padrao
 
     """ Dicionário de mensagens de resposta ao usuário. """
     mensagens = {
