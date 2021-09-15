@@ -30,9 +30,7 @@ class Labirinto(BotPlugin):
     5 = 4 + 1 = jogador no sentido Sul + sala ou corredor.
     """
 
-    CONNECTION_STRING = "".join(["mongodb+srv://etorresini:", environ.get("MONGODB_PASSWORD"),
-                                "@cluster0.rssfl.mongodb.net/Cluster0?retryWrites=true&w=majority"])
-    client = MongoClient(CONNECTION_STRING)
+    client = MongoClient(environ.get("MONGODB_CONNECTION_STRING"))
     partidas = client.Cluster0.partidas
 
     def partida(self, jogador, atualizar=None):
