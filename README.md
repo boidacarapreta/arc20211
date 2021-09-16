@@ -1,6 +1,6 @@
-[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/boidacarapreta/arc20211)
+# ARC 2021.1
 
-# Projeto da disciplina
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/boidacarapreta/arc20211)
 
 O problema escolhido para este semestre é um _chatbot_ integrado ao Discord. Mais especificamente, um jogo baseado em texto inspirado nos clássicos e (muito) antigos jogos de computador.
 
@@ -82,7 +82,48 @@ de forma que as descrições sejam mais dinâmicas.
 
 Parece complicado apenas lendo a explicação deste jogo? Imagina jogá-lo usando apenas texto! Por isso usarei bastante o [kanban](https://github.com/boidacarapreta/arc20211/projects/1) para organizar as ideias.
 
-# Equipes e repositórios
+## Execução
+
+Este repositório foi preparado com as boas práticas do [Errbot](https://errbot.readthedocs.io/en/latest/user_guide/setup.html), o que inclui ambiente virtual (_virtualenv_) e `systemd`.
+
+Para executar, é preciso criar o ambiente inicial (diretório `data/`) do Errbot:
+
+```sh
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+errbot --init
+```
+
+Nota: este comando também modifica o arquivo `config.py`. Uma sugestão é restaurar com:
+
+```sh
+git restore config.py
+```
+
+Na sequência, criar o arquivo `.env` na raiz do repositório com o seguinte conteúdo:
+
+```ini
+BOT_ADMIN=...
+DISCORD_TOKEN=...
+MONGODB_CONNECTION_STRING=...
+```
+
+onde:
+
+- `BOT_ADMIN` é o usuário do Discord para administrar o bot.
+- `DISCORD_TOKEN` é o token de bot para acessar o servidor.
+- `MONGODB_CONNECTION_STRING` é a URL completa para acessar banco de dados no servidor MongoDB.
+
+Por fim, o arquivo `.vscode/launch.json` possui configuração para depurar em [Gitpod](https://gitpod.io) e [Visual Studio Code](https://code.visualstudio.com) ou, se preferir, diretamente no terminal:
+
+```sh
+source venv/bin/activate
+errbot
+```
+
+## Equipes e repositórios
 
 - [lasscampos](https://github.com/lasscampos): [ARC-2021](https://github.com/lasscampos/ARC-2021)
 - [iftelecom](https://github.com/iftelecom): [arc21](https://github.com/iftelecom/arc21)
