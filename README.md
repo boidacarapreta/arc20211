@@ -112,9 +112,9 @@ MONGODB_CONNECTION_STRING=...
 
 onde:
 
-- `BOT_ADMIN` é o usuário do Discord para administrar o bot.
-- `DISCORD_TOKEN` é o token de bot para acessar o servidor.
-- `MONGODB_CONNECTION_STRING` é a URL completa para acessar banco de dados no servidor MongoDB.
+- `BOT_ADMIN` (tarefa #1) é o usuário do Discord para administrar o bot.
+- `DISCORD_TOKEN` (tarefa #7) é o token de bot para acessar o servidor.
+- `MONGODB_CONNECTION_STRING` (tarefa #21) é a URL completa para acessar banco de dados no servidor MongoDB.
 
 Por fim, o arquivo `.vscode/launch.json` possui configuração para depurar em [Gitpod](https://gitpod.io) e [Visual Studio Code](https://code.visualstudio.com) ou, se preferir, diretamente no terminal:
 
